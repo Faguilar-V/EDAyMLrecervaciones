@@ -104,17 +104,87 @@ if __name__ == '__main__':
                    ("LR_model", LogisticRegression(random_state=42,n_jobs=-1)),
                    ("svm_model", svm.SVC(random_state=42)),
                   ]
-    #For 1 model first
-    param_grid = {'n_estimators': [200],
-                  'max_features': ['auto'],
-                  'criterion' :['entropy', 'gini']
-                 }
-    forest_reg = RandomForestClassifier(random_state=42, n_jobs=-1)
-    grid_search = GridSearchCV(estimator=forest_reg, param_grid=param_grid, cv=3, verbose=True)
     
+    ##%%%%%%%%%%%%%%%%For RandomForest%%%%%%%%%%%%%%%%%%%%%%%## 
+    #{'criterion': 'gini',
+    # 'max_depth': 32,
+    #'max_features': 'auto',
+    #'n_estimators': 285}
+    """
+    param_grid = {'n_estimators': [270, 285],
+                  'max_features': ['auto'],
+                  'max_depth': [31, 32, 40],
+                  'criterion' :['gini']
+                 }
+    forest_reg = RandomForestClassifier(n_estimators=290,
+                                        criterion='gini',
+                                        max_depth=32,
+                                        min_samples_split=2,
+                                        min_samples_leaf=1, 
+                                        min_weight_fraction_leaf=0.0, 
+                                        max_features='auto', 
+                                        max_leaf_nodes=None, 
+                                        min_impurity_decrease=0.0, 
+                                        min_impurity_split=None, 
+                                        bootstrap=True, 
+                                        oob_score=False, 
+                                        n_jobs=-1, 
+                                        random_state=42, 
+                                        verbose=1, 
+                                        warm_start=False, 
+                                        class_weight=None, 
+                                        ccp_alpha=0.0, 
+                                        max_samples=None, 
+                                       )
+    """
+    #%%%%%%%%%%%%%%%%%%%%%%%For SVM%%%%%%%%%%%%%%%%%%%%%%%##
+    #param_grid = {'n_estimators': [200],
+    #              'max_features': ['auto'],
+    #              'criterion' :['entropy', 'gini']
+    #             }
+    #svm_clf = svm.SVC(C=2,
+    #                  break_ties=True, 
+    #                  cache_size=200,
+    #                  class_weight=None, 
+    #                  coef0=0.0, 
+    #                  decision_function_shape='ovr', 
+    #                  degree=3, 
+    #                  gamma='scale', 
+    #                  kernel='linear', 
+    #                  max_iter=-1, 
+    #                  probability=False, 
+    #                  random_state=None, 
+    #                  shrinking=True, 
+    #                  tol=0.001, 
+    #                  verbose=True
+    #                 )
+    
+    
+    ###%%%%%%%%%%%%%%%%%%%%%%%For DecisionTree%%%%%%%%%%%%%%%%%%%%%%%##
+    #param_grid = {'max_features': ['auto'],
+    #              'max_depth': [30,],
+    #              'splitter': ['best', 'random'],
+    #              'criterion' :['gini']
+    #             }
+    #dt_clf = DecisionTreeClassifier(random_state=42)
+
+    ##%%%%%%%%%%%%%%%%%%%%%%%For LogisticRegresion%%%%%%%%%%%%%%%%%%%%%%%##
+    param_grid = {'penalty': ['l1', 'l2'],
+                  'max_iter': [250, 500],
+                  'multi_class': ['auto', 'ovr', 'multinomial'],
+                 }
+    log_reg = LogisticRegression(random_state=42, n_jobs=-1)
+
+
+    grid_search = GridSearchCV(estimator=log_reg, 
+                                param_grid=param_grid, 
+                                cv=5, 
+                                verbose=True
+                                )
     grid_search.fit(X_train, y_train)
     #For evaluate model
     final_model = grid_search.best_estimator_
     y_predict = final_model.predict(X_test)
     print(classification_report(y_test, y_predict))
 
+0
