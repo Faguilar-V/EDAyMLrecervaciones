@@ -52,7 +52,7 @@ if __name__ == '__main__':
     #Numerical atributs droped
     atrs_n = ['arrival_date_year', 'arrival_date_day_of_month', 'stays_in_weekend_nights', 'stays_in_week_nights', 'adults', 'children', 'babies', 'company', 'agent']#, 'total_guests']
     #Categorical atributs droped 
-    atrs_cat = ['reservation_status_date', 'reservation_status', 'market_segment', 'distribution_channel', 'reserved_room_type', 'assigned_room_type', 'country']
+    atrs_cat = ['reservation_status', 'reservation_status_date', 'country', 'market_segment', 'distribution_channel', 'reserved_room_type', 'assigned_room_type']
     atrs = atrs_cat + atrs_n
     #Train
     X_train = X_train.drop(atrs, axis=1)
@@ -96,13 +96,11 @@ if __name__ == '__main__':
     X_test = full_pipeline.fit_transform(X_test)
     print(X_train.shape, y_train.shape, X_test.shape, y_test.shape)
 
-    tree_clas = DecisionTreeClassifier(ccp_alpha=0.0000001, criterion='gini',
-                       max_depth=33, max_features=9, max_leaf_nodes=None,
-                       min_impurity_decrease=0.0, min_impurity_split=None,
-                       min_samples_leaf=1, min_samples_split=2,
-                       min_weight_fraction_leaf=0.0, presort='deprecated',
-                       random_state=42, splitter='best')
-    tree_clas.fit(X_train, y_train)
-    y_predict = tree_clas.predict(X_test)
-    print(classification_report(y_test, y_predict))
-    print(accuracy_score(y_test, y_predict))
+    svm_clf = svm.SVC(C=1.0, break_ties=False, cache_size=800, class_weight=None, coef0=0.0,
+                        decision_function_shape='ovr', degree=3, gamma='scale', kernel='rbf',
+                        max_iter=-1, probability=True, random_state=42, shrinking=True, tol=0.001,
+                        verbose=False)
+    svm_clf.fit(X_train, y_train)
+    y_predict_svm = svm_clf.predict(X_test)
+    print(classification_report(y_test, y_predict_svm))
+    print(accuracy_score(y_test, y_predict_svm))

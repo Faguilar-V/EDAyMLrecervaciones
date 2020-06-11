@@ -52,7 +52,7 @@ if __name__ == '__main__':
     #Numerical atributs droped
     atrs_n = ['arrival_date_year', 'arrival_date_day_of_month', 'stays_in_weekend_nights', 'stays_in_week_nights', 'adults', 'children', 'babies', 'company', 'agent']#, 'total_guests']
     #Categorical atributs droped 
-    atrs_cat = ['reservation_status', 'reservation_status_date', 'country', 'market_segment', 'distribution_channel', 'reserved_room_type', 'assigned_room_type']
+    atrs_cat = ['reserved_room_type', 'assigned_room_type', 'reservation_status', 'reservation_status_date', 'country', 'market_segment']#, 'distribution_channel']
     atrs = atrs_cat + atrs_n
     #Train
     X_train = X_train.drop(atrs, axis=1)
@@ -96,11 +96,29 @@ if __name__ == '__main__':
     X_test = full_pipeline.fit_transform(X_test)
     print(X_train.shape, y_train.shape, X_test.shape, y_test.shape)
 
-    svm_clf = svm.SVC(C=1.0, break_ties=False, cache_size=800, class_weight=None, coef0=0.0,
-                        decision_function_shape='ovr', degree=3, gamma='scale', kernel='sigmoide',
-                        max_iter=-1, probability=True, random_state=42, shrinking=True, tol=0.001,
-                        verbose=False)
-    svm_clf.fit(X_train, y_train)
-    y_predict = svm_clf.predict(X_test)
-    print(classification_report(y_test, y_predict))
-    print(accuracy_score(y_test, y_predict))
+    forest_reg = RandomForestClassifier(n_estimators=292,
+                                        criterion='gini',
+                                        max_depth=32,
+                                        min_samples_split=2,
+                                        min_samples_leaf=1, 
+                                        min_weight_fraction_leaf=0.0, 
+                                        max_features=8, 
+                                        max_leaf_nodes=None, 
+                                        min_impurity_decrease=0.0, 
+                                        min_impurity_split=None, 
+                                        bootstrap=True, 
+                                        oob_score=True, 
+                                        n_jobs=-1, 
+                                        random_state=42, 
+                                        verbose=0, 
+                                        warm_start=False, 
+                                        class_weight=None, 
+                                        ccp_alpha=0.000001, 
+                                        max_samples=None, 
+                                       )
+    forest_reg.fit(X_train, y_train)
+    y_predict_rf = forest_reg.predict(X_test)
+    y_test_rf = y_test
+    X_test_rf = X_test
+    print(classification_report(y_test, y_predict_rf))
+    print(accuracy_score(y_test, y_predict_rf))

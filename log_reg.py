@@ -18,6 +18,9 @@ from sklearn.model_selection import train_test_split, KFold, cross_validate, cro
 #for evaluate our models
 from sklearn.metrics import classification_report
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import precision_score, recall_score
+from sklearn.metrics import f1_score, fbeta_score
 
 
 from matplotlib import pyplot as plt
@@ -102,6 +105,8 @@ if __name__ == '__main__':
                    random_state=42, solver='lbfgs', tol=0.0001, verbose=0,
                    warm_start=False)
     log_reg.fit(X_train, y_train)
-    y_predict = log_reg.predict(X_test)
-    print(classification_report(y_test, y_predict))
-    print(accuracy_score(y_test, y_predict))
+    y_predict_lr = log_reg.predict(X_test)
+    y_test_lr = y_test
+    X_test_lr = X_test
+    print(classification_report(y_test, y_predict_lr))
+    print(accuracy_score(y_test, y_predict_lr))
